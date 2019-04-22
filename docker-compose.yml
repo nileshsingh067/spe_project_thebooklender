@@ -7,18 +7,18 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: root   
     ports: 
-      - "8002:3306"
+      - "8011:3306"
     restart: always
     volumes: 
       - container-volume:/var/lib/mysql
-      - ./mysql_docker/script/query.sql:/docker-entrypoint-initdb.d/query.sql
+      - ./query.sql:/docker-entrypoint-initdb.d/query.sql
   javaserver: 
     build: 
       context: "."
     depends_on: 
       - database
     ports: 
-      - "8001:8080"
+      - "8010:8080"
     restart: always
 version: "3.7"
 volumes: 
