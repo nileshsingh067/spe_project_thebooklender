@@ -12,7 +12,7 @@ public class DBConnection {
 			Connection con=null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
-				con=DriverManager.getConnection("jdbc:mysql://localhost:3306/booklender", "root", "root"
+				con=DriverManager.getConnection("jdbc:mysql://localhost1:3306/booklender", "root", "root"
 						+ "");
 				System.out.println(logHead+" Mysql Connection Created Successfully ..");
 			}catch(Exception e) {
