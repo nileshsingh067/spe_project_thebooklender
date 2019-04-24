@@ -1,4 +1,4 @@
- package com.project.thebooklender.utility;
+package com.project.thebooklender.utility;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

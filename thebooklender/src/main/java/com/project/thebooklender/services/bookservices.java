@@ -296,6 +296,34 @@ public class bookservices {
 		bookdao dao = new bookdao();
 		return dao.getBooks();
 	}
+	
+	@GET 
+	@Path("/isexistsInTransaction")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public int isexistsInTransaction(@QueryParam("bookid") int bookid)
+	{
+		//by borrower
+		bookdao dao =  new bookdao();
+		Requestlog rl = dao.getBookDetailsFromTranscation(bookid);
+		
+		System.out.println(rl.getBook_id());
+		
+		if(rl.getBook_id()!=0)
+		{
+			return 1;
+		}
+		return 0; 
+	}
+	
+	@POST @Path("/rejectrequest")
+	@Consumes("application/json")
+	public Response rejectRequest(@QueryParam("bookid") int bookid,@QueryParam("userid") int userid)
+	{
+		bookdao dao =  new bookdao();
+		dao.cancelRequest(userid,bookid);
+		return Response.ok().build();
+	}
 //	@GET
 //	@Path("/checkexists/{id}")
 //	@Produces("application/json")
