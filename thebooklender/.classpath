@@ -20,12 +20,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/home/saicharan/Desktop/IIITB/SPE/jars_folder/servlet-api.jar"/>
-	<classpathentry kind="lib" path="/home/saicharan/Desktop/IIITB/SPE/jars_folder/mysql-connector-java-5.1.47.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v8.5">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.web"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/saicharan/mysql-connector-java-8.0.15.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

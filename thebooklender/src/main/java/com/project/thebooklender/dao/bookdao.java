@@ -412,7 +412,7 @@ public class bookdao {
 	public String getEmailAddress(int ownerid) throws SQLException {
 		Connection conn = null;
 		String emailaddress="";
-		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/booklender", "root", "1234");
+		conn = DriverManager.getConnection("jdbc:mysql://db4free.net:3306/booklender", "spebooklender", "8a314486");
 		PreparedStatement ps = conn.prepareStatement("select user_email from users where id in (" + ownerid + ")");
 		ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
