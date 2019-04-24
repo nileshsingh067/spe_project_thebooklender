@@ -21,15 +21,15 @@ public class BookTest extends JerseyTest {
 	
     @Test
     public void bookbyid() {
-        Book response = target("books/3").request().get(Book.class);
-        Assert.assertTrue("Pride and Prejudice".equals(response.getTitle()));
+        Book response = target("books/2").request().get(Book.class);
+        Assert.assertTrue("Introduction to Algorithms".equals(response.getTitle()));
     }
     
     @Test
     public void bookbyuserid() {
         String response = target("books/user/2").request().get(String.class);
         System.out.println(response);
-        Assert.assertTrue(response.contains("Pride and Prejudice"));
-        Assert.assertTrue(response.contains("Introduction to Algorithms"));
+        Assert.assertTrue(response.contains("Computer Networking"));
+        Assert.assertTrue(response.contains("Data Communications"));
     }
 }
