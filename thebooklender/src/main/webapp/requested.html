@@ -9,13 +9,16 @@
 <script src="js/index.js"></script>
 <script src="js/register.js"></script>
 <script src="js/login.js"></script>
+ <script src="js/jquery-ui.js"></script>
 <script src="js/bootstrap-hover-dropdown.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.js"></script> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
 <link rel="stylesheet" type="text/css" href="./css/index.css">
 <link rel="stylesheet" type="text/css" href="./css/Bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="./css/dropdown.css">
 
 <link rel="stylesheet" type="text/css" href="./css/cr.css">
-
+<link rel="stylesheet" type="text/css" href="./css/jquery-ui.css">
 
 
 <link rel="stylesheet" href="assets/css/main.css">
@@ -167,17 +170,16 @@ font {
 				</div>
 				<div class="_1NLCcM">
 					<form class="_1WMLwI header-form-search" action="#" method="GET">
-						<div class="wor">
+<div class="wor">
 							<div class="loc-11-12 ">
 								<div class="O8ZS_U">
 									<input type="text" value="" class="LM6RPg"
-										title="Search for books" name="q"
 										autocomplete="off"
-										placeholder="Search for products, brands and more">
+										placeholder="Search for books" id="search-bar">
 								</div>
 							</div>
 							<div class="loc-1-12">
-								<button class="vh79eN" type="submit">
+								<a class="vh79eN" type="submit" id="search-button">
 									<svg width="20" height="20" viewBox="0 0 17 18" class=""
 										xmlns="http://www.w3.org/2000/svg">
 										<g fill="#2874F1" fill-rule="evenodd">
@@ -187,8 +189,11 @@ font {
 											d="m6.486 10.901c-2.42 0-4.381-1.956-4.381-4.368 0-2.413 1.961-4.369 4.381-4.369 2.42 0 4.381 1.956 4.381 4.369 0 2.413-1.961 4.368-4.381 4.368m0-10.835c-3.582 0-6.486 2.895-6.486 6.467 0 3.572 2.904 6.467 6.486 6.467 3.582 0 6.486-2.895 6.486-6.467 0-3.572-2.904-6.467-6.486-6.467"></path>
 										</g>
 									</svg>
-								</button>
+								</a>
+								
 							</div>
+							<input type="hidden" name="item.html?bookId=" value="search"> 
+						</div>
 							<input type="hidden" name="otracker" value="search"> <input
 								type="hidden" name="otracker1" value="search"> <input
 								type="hidden" name="marketplace" value="FLIPKART"> <input
@@ -543,11 +548,14 @@ font {
 		style="margin: 0px 0px 0px 0px; background-color: white">
 		<hr />
 		<div align="center">
-			<font color="Blue">Books Requested Pending </font> <font color="red">(<span
+			<font color="Blue">Books Requests to be approved</font> <font color="red">(<span
 				id="count"> </span>)
 			</font>
 		</div>
 		<hr />
+		<div id="reqdiv" align="center" style="display:none;font: 25px arial,sans-serif;">
+            No book requests for approval.
+        </div>
 		<div class="row" style="text-align: center">
 			<div id="listinng">
 			
@@ -562,6 +570,9 @@ font {
 			<font color="Blue">Books Lent out</font>
 		</div>
 		<hr />
+		 <div id="lentdiv" align="center" style="display:none;font:25px arial, sans-serif;">
+             You haven't lent books to anyone.
+        </div>
 		<div class="row" style="text-align: center">
 			<div id="listingg"></div>
 
@@ -570,14 +581,16 @@ font {
 </body>
 <script>
 	$(document).ready(function() {
+		var name = localStorage.getItem("user_name");
+		$("#prashant").text("Hi " + name);
 		getbookids();
 		loadListing();
 	})
 	
-var user1;
+    var user1;
 	var result1;
 	function getbookids() {
-		var name = localStorage.getItem("name");
+		var name = localStorage.getItem("user_name");
 		var ownerId = localStorage.getItem("id");
 		$.ajax({
 			type : 'GET',
@@ -586,13 +599,20 @@ var user1;
 			async : false,
 			dataType : "json", // data type of response
 			success : function(result) {
-				result1=result;
-		//	console.log(result);
+			if(result.length==0)
+			{
+				$("#reqdiv").show();
+				$("#lentdiv").show();
+			}
+			else
+		    {
+			result1=result;
+		  	console.log(result);
 			for (var i in result) 
 			{
 				loadListings(result[i]);
-				
 			}
+		    }
 			},
 			error : function() {
 				swal("error occurred");
@@ -615,11 +635,9 @@ var user1;
 			contentType : 'application/json',
 			url : new_url,
 			async : false,
-			dataType : "json", // data type of response
 			success : function(users) {
-				
-				$("#count").text(users.length);
-				//console.log("chim nnnnn "+users);
+				//$("#count").text(users.length);
+				console.log("chim nnnnn "+users);
 				for ( var i in users) {
 					//console.log("cre "+ users[i].id);
 					user1=users[i];
@@ -664,7 +682,7 @@ var user1;
 					"</button><button class='btn btn-primary' onclick='acceptrequest("+result.id+","+users.id+","+j+")' type='button'>Add Request</button>"
 				+"		</td> "+	"<td >"+
 				"<button data-toggle='dropdown' type='button'>"+
-				"</button><button class='btn btn-primary cart-btn' onclick='rejectrequest()' type='button'>Reject Request</button>"
+				"</button><button class='btn btn-primary cart-btn' onclick='rejectrequest("+result.id+","+users.id+","+j+")' type='button'>Reject Request</button>"
 				+
 				"</td> </tr></table>	</div></div>";
 
@@ -692,12 +710,11 @@ var user1;
 					"</button><button class='btn btn-primary' onclick='acceptrequest("+result.id+","+users.id+","+j+")' type='button'>Add Request</button>"
 				+"		</td> "+	"<td >"+
 				"<button data-toggle='dropdown' type='button'>"+
-				"</button><button class='btn btn-primary cart-btn' onclick='rejectrequest()' type='button'>Reject Request</button>"
+				"</button><button class='btn btn-primary cart-btn' onclick='rejectrequest("+result.id+","+users.id+","+j+")' type='button'>Reject Request</button>"
 				+
 				"</td> </tr></table>	</div></div>";
 			data += "</div>";
 		}
-		//console.log(data);
 		$('#listinng').append(data);
 
 	}
@@ -709,7 +726,7 @@ var user1;
 		$.ajax({
 			type : 'GET',
 			contentType : 'application/json',
-			url : " http://localhost:8080/thebooklender/api/books/lentbooks/" + ownerId,
+			url : "http://localhost:"+location.port+"/thebooklender/api/books/lentbooks/" + ownerId,
 			async : false,
 			dataType : "json", // data type of response
 			success : function(result) {
@@ -741,7 +758,7 @@ var user1;
 							"src='" + result.image+"' alt=''>"
 					+ "</div></div>"
 					+ "<div style = 'font-size:16px; text-align:centre'>"
-					+ result.tittle
+					+ result.title
 					+ "</div>"
 					+ "<div style = 'font-size:16px; text-align:centre'>ISBN:&nbsp;&nbsp;"
 					+ result.isbn
@@ -769,7 +786,7 @@ var user1;
 						"src='" +image+"' alt=''>"
 					+ "</div></div>"
 					+ "<div style = 'font-size:16px; text-align:centre'>"
-					+ result.tittle
+					+ result.title
 					+ "</div>"
 					+ "<div style = 'font-size:16px; text-align:centre'>ISBN:&nbsp;&nbsp;"
 					+ result.isbn
@@ -856,62 +873,23 @@ var user1;
 		$("#accept"+j).hide();
 	}
 		
-	function rejectrequest(){
-		var myurl="http://localhost:"+location.port+"/thebooklender/api/books/cancelbook?bookid="+result+"&userid="+user;
-	console.log(myurl);
-			$.ajax({
-			type : 'GET',
+	function rejectrequest(result,user,j) {
+		var bookId = result;
+		var userId = user;
+		console.log(bookId+" "+userId);
+		var ctxPath = "http://localhost:" + location.port + "/thebooklender";
+		$.ajax({
+			type: 'POST',
 			contentType : 'application/json',
-			url : "http://localhost:"+location.port+"/thebooklender/api/books/requestedby?bookid="+result+"&userid="+user,
-			async : false,
-			dataType : "json", // data type of response
-			success : function(data ) {
-				console.log(data);
-				
-				callyou(data,result,user);
-			},
-			error : function() {
-				alert("error occurred");
+			url : ctxPath + "/api/books/rejectrequest?bookid="+ bookId + "&userid=" + userId,
+			success : function(result) {
+				swal({
+					  title: "Request Rejected",
+					  icon: "success",
+					});
+				window.location.reload(true);
 			}
 		});
-		
-	}	
-		
-		
-		function callyou(result,bookid,user){
-			console.log("print id ="+result);
-			console.log("anirudh");
-			console.log("c ="+result);
-			console.log("u ="+user);
-			var lenderId = localStorage.getItem("id");
-			var bookId = bookid;
-			var borrowerId = user;
-			//console.log(user1);
-			
-		var txn_id = result;
-		console.log(txn_id);
-		var txnbody = JSON.stringify({
-			"id" :  bookId,
-			"owner_id" : lenderId,
-		});
-		console.log(txnbody);
-		var print="http://localhost:"+location.port+"/thebooklender/api/books/issuebook?borrowerid=" + user;
-		console.log(print);
-		$.ajax({
-			type : 'POST',
-			contentType : 'application/json',
-			url : "http://localhost:"+location.port+"/thebooklender/api/books/issuebook?borrowerid=" + user,
-			async : false,
-			data : txnbody,
-			dataType : "json", // data type of response
-			success : function() {
-				window.location.reload(true);
-				//console.log(result);
-				//alert("you have confirm requested");
-			},
-			
-		});
-		window.location.reload(true);
 	}
 	
 		function getBookBack(id){
@@ -924,16 +902,18 @@ var user1;
 				async : false,
 				success : function(data ) {
 					console.log(data);
-					alert("You have submitted request to get your book.")
+				  swal({
+					  title: "You have submitted request to get your book.",
+					  icon: "success",
+					});
 					checkbuttonexists(bookid);
-					
 				},
 				error : function() {
 					alert("error occurred");
 				}
 			});
 		}	
-		
+		         
 		function gotBook(id)
 		{
 			var URL="http://localhost:"+location.port+"/thebooklender/api/books/gotbook?bookid="+id;
@@ -945,6 +925,10 @@ var user1;
 					async : false,
 					success : function(data ) {
 						console.log(data);
+						  swal({
+							  title: "You have confirmed  that your recieved your book.",
+							  icon: "success",
+							});
 					},
 					error : function() {
 						alert("error occurred");
@@ -1003,10 +987,81 @@ var user1;
 			
 		}	
 		
+		
 	function logout() {
 		localStorage.clear();
 	}
 </script>
+<script type="text/javascript">
+	var selectedId;
+	var items = [];
+	var suggestionItems = [];
+	var ani = [];
+	
+	$.ajax({
+		type : 'GET',
+		url : "http://localhost:" + location.port + "/thebooklender/api/books/allbooks",
+		dataType : "json",
+		async: false,
+		success : function(itemList) {
+			/*  console.log("gvhgvjhvjhvhjv "+itemList); 
+ */			ItemAutoComplete(itemList);
+			},
+		error : function(err) {
+			alert(err.status);
+			}
+		});
+		
+	function ItemAutoComplete(itemList){
+		 /* console.log("gvhgvjhvjhvhjv "+itemList); */
+		var itemSearch = [];
+		for(var x in itemList){
+			var temp = {};
+			temp['id'] = itemList[x].id;
+			temp['value'] = itemList[x].title;
+			itemSearch.push(temp);
+			ani.push(temp);
+			items.push(itemList[x].title);
+			//console.log("ani print ="+ani[x].value);
+ 		}
+		$( "#search-bar" ).autocomplete({
+			  source: itemSearch,
+			  response: function(event, ui){
+				  suggestionItems = ui.content;
+				  console.log("===========================");
+				  for(var it in suggestionItems){
+					  console.log(suggestionItems[it]);
+				  }
+			  },
+			  select: function(event, ui){
+				  suggestionItems = ui.content;
+				  console.log("===========================");
+				  for(var it in suggestionItems){
+					  console.log(suggestionItems[it]);
+				  }
+			  }
+			});
+	}
+	
+	$("#search-button").click(function(){
+		console.log("search items ="+ani[0].value);
+		var searchVal = $("#search-bar").val();
+		console.log(searchVal);
+		for (var i in ani){
+			if(ani[i].value.includes(searchVal)){
+				searchVal=ani[i].id;
+			}
+		}
+		window.location.href = "http://localhost:"+location.port+"/thebooklender/item.html?bookId="+searchVal;
+		
+		/* if(items.includes(selectedItem)==true)
+			window.location.href = "item.jsp?id="+selectedId;
+		else
+			swal("", "No such item found", "error"); */
+	})
+	
+	</script>
+
 <!-- <div style="margin:352px;"></div> -->
 <footer id="footer" class="footer color-bg">
 
