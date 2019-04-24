@@ -11,7 +11,7 @@ $(document).ready(function() {
     console.log("print iteeeeee");
     var formJson = JSON.stringify(formData);
     console.log(formJson);
-    var url = "http://localhost:8080/thebooklender/api/users/email";
+    var url = "http://localhost:" + location.port + "/thebooklender/api/users/email";
     console.log(url);
     
     jQuery.ajax({
