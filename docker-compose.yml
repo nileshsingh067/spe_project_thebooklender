@@ -6,10 +6,6 @@ services:
     ports: 
       - "8010:8080"
     restart: always
-    logging:
-      driver: syslog
-      options:
-        syslog-address: "tcp://localhost:5000"
 
 version: "3.7"
 volumes: 
