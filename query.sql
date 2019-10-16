@@ -1,7 +1,7 @@
 GRANT ALL PRIVILEGES on booklender.*
 TO 'root'@'%' IDENTIFIED BY 'root'
 WITH GRANT OPTION;
-FLUSH PRIVILEGES;
+
 create table users(id int NOT NULL auto_increment,user_name varchar(20),user_email varchar(35) not null unique key,password varchar(20)not null,address varchar(10),PRIMARY KEY (id));
 
 CREATE TABLE book (id int NOT NULL auto_increment,book_id varchar(10) not null unique key,title varchar(500),author varchar(500),publisher varchar(1000), description varchar(2000), isbn varchar(50) not null unique key,available varchar(20),image varchar(3000), category varchar(50),owner_id int,PRIMARY KEY (id),FOREIGN KEY (owner_id) REFERENCES users(id));
